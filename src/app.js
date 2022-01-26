@@ -1,6 +1,7 @@
 const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
+const validator = require('validator')
 const geocode = require('./utils/geocode')
 const getFlights = require('./utils/flights')
 
@@ -35,9 +36,13 @@ app.get('/flights', (req, res) => {
         return res.send({
             error: 'Please provide an address'
         })
+    } else if (!validator.isInt(req.query.searchRadius, { gt:1})) {
+        return res.send({
+            error: 'Please provide an integer radius equal to or greater than 1km'
+        })
     }
 
-    geocode(req.query.address, (error, {latitude, longitude, bbox, location} = {}) => {
+    geocode({address: req.query.address, searchRadius: req.query.searchRadius}, (error, {latitude, longitude, bbox, location} = {}) => {
         if (error) {
             return res.send({error})
         }
@@ -73,17 +78,17 @@ app.listen(port, () => {
     console.log('Server started on port 3000')
 })
 
- const location = 'London'
+ const location = 'London Heathrow'
 
 if (!location) {
     console.log('Please provide a location')
 } else {
-    geocode(location, (error, {latitude, longitude, bbox, location} = {}) => {
+    geocode({address: location, searchRadius: 10}, (error, {latitude, longitude, bbox, location} = {}) => {
         if (error) {
             return console.log(error)
         }
 
-        console.log(latitude, longitude, location, bbox)
+        //console.log(latitude, longitude, location, bbox)
 
         getFlights(bbox, (error, flightData) => {
             if (error) {

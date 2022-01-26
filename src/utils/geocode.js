@@ -1,6 +1,9 @@
 const request = require('request')
+const mapboxgl = require('mapbox-gl')
+mapboxgl.accessToken = 'pk.eyJ1IjoiamFrZWphbWVzOTYiLCJhIjoiY2t5b3J1M3BwMDJ5dzJwbnBzbjR5ZXhhYSJ9.gPK8xDdBYCfQmu0tBHSqVA'
 
-const geocode = (address, callback) => {
+
+const geocode = ({address, searchRadius}, callback) => {
     const url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json?access_token=pk.eyJ1IjoiamFrZWphbWVzOTYiLCJhIjoiY2t5b3J1M3BwMDJ5dzJwbnBzbjR5ZXhhYSJ9.gPK8xDdBYCfQmu0tBHSqVA&limit=1'
 
     request({url, json:true}, (error, {body}) => {
@@ -14,26 +17,25 @@ const geocode = (address, callback) => {
             const latitude = feature.center[1]
             const longitude = feature.center[0]
 
-            // const latmin = latitude - 0.25
-            // const latmax = latitude + 0.25
-            // const lonmin = longitude - 0.25
-            // const lonmax = longitude + 0.25
+            // Create a new mapbox Long Lat object with the found coordinates
+            const ll = new mapboxgl.LngLat(longitude, latitude )
 
-            const latmin = latitude - 2
-            const latmax = latitude + 2
-            const lonmin = longitude - 2
-            const lonmax = longitude + 2
+            // Calculate coordinates of a bounding box at radius given
+            const radius = searchRadius * 1000
+            const bounds = ll.toBounds(radius)
+            const bbox = {
+                latmax: bounds.getNorth(),
+                latmin: bounds.getSouth(),
+                lonmax: bounds.getEast(),
+                lonmin: bounds.getWest()
+            }
+            //console.log(bbox)
 
             callback(undefined, {
                 location: placeName,
                 latitude,
                 longitude,
-                bbox: {
-                    latmin,
-                    lonmin,
-                    latmax,
-                    lonmax
-                }
+                bbox
             })
         }
     })

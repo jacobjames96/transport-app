@@ -13,17 +13,19 @@
 console.log('Loaded client side JS')
 
 const weatherForm = document.querySelector('form')
-const search = document.querySelector('input')
+const search = document.querySelector('#search-location')
+const radius = document.querySelector('#flight-radius')
 const messageOne = document.querySelector('#message-error')
 const messageTwo = document.querySelector('#message-forecast')
 
 weatherForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const location = search.value
+    const searchRadius = radius.value
 
     messageOne.textContent = 'Loading Flights'
     messageTwo.textContent = ''
-    fetch('/flights?address=' + location).then((response) => {
+    fetch('/flights?address=' + location + '&searchRadius=' + searchRadius).then((response) => {
         response.json().then((data) => {
             if (data.error) {
                 messageOne.textContent = data.error
@@ -34,5 +36,4 @@ weatherForm.addEventListener('submit', (e) => {
         })
     })
 
-    console.log(location)
 })

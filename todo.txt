@@ -1,0 +1,10 @@
+1. Show individual flights as a table
+1.a. calculate flights distance from chosen point
+1.b. parse flight number to find carrier, O/D?
+DONE 2. Dynamically calculate bounding box to be x mile radius from chosen point
+DONE 2.a. add radius selection drop down to set this
+3. Show a map on the page
+3.a. allow user to select a point on the map to show flights around
+3.b. show chosen point on map
+3.c. show radius around chosen point on map
+3.d. show flights on map
