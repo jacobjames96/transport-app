@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <title>Transport</title>
+</head>
+
+<body>
+    <div class="main-content">
+        {{> header}}
+        <p>Search a location to see how many flights there currently are overhead!</p>
+
+        <form>
+            <input placeholder="Location">
+            <button>Search</button>
+        </form>
+
+        <p id="message-error"></p>
+        <p id="message-forecast"></p>
+    </div>
+
+    {{> footer}}
+
+    <script src="/js/app.js"></script>
+</body>
+
+</html>
